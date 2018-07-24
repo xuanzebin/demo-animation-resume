@@ -64,47 +64,49 @@ body{
 我们先在旁边新建一个简历的纸张吧 */
 `
 
-var resumeWords=`#宣泽彬
+var resumeWords=`##宣泽彬
 求职意向：前端工程师
 
-##基础信息
+**基础信息**
 生日：1997.05              性别：男
 民簇：汉族               地址：广东省中山市
 
-##教育背景
+**教育背景**
 2015.09-至今    中山大学    环境科学与工程专业
 
-##项目/作品经历
+**项目/作品经历**
 1.键盘导航
 2.口袋画板
 3.网页简历
 4.苹果风格轮播
 
-##联系方式
+**联系方式**
 - QQ 492247143
 - Email 492247143@qq.com
 - 手机 17328303981
 
-####博客链接
+**博客链接**
 https://www.jianshu.com/u/768a46354348
 
-####github链接
+**github链接**
 https://github.com/xuanzebin
 `
 
-
+var lastResult=`
+/* 可以看到我们把Markdown格式的简历展示出来了
+为了方便观看
+我们把他转换成HTML吧 */
+`
 
 var pageWidth=window.innerWidth
-var adjustRem=`html{
-    font-size:${pageWidth}px;
-}`
+document.write(`<style>html{ font-size:${pageWidth}px; }</style>`)
 
 function writeCode(preCode,Code,fn){
     let n=0
     let id=setInterval(()=>{
         n++
         let domCode=document.querySelector('#code')
-        domCode.innerHTML = Prism.highlight(Code.substring(0,n), Prism.languages.css, 'css');
+        domCode.innerHTML = Prism.highlight(preCode+Code.substring(0,n), Prism.languages.css, 'css');
         styleCode.innerHTML=preCode+Code.substring(0,n)
         domCode.scrollTop=domCode.scrollHeight
         if (n>=Code.length) {
@@ -112,7 +114,7 @@ function writeCode(preCode,Code,fn){
             resumePaper.style="display:flex;"
             fn.call()
         }
-    },0)
+    },80)
 }
 function writeRusume(preWords,Words,fn){
     let n=0
@@ -123,8 +125,9 @@ function writeRusume(preWords,Words,fn){
         resumeWords.scrollTop=resumeWords.scrollHeight
         if (n>=Words.length) {
             window.clearInterval(id)
+            fn.call()
         }
-    },0)    
+    },50)    
 }
 
 var pre=document.createElement('pre')
@@ -132,6 +135,14 @@ pre.id="resume"
 resumePaper.style="display:none;"
 resumePaper.appendChild(pre)
 
-writeCode(adjustRem,result,()=>{
-    writeRusume('',resumeWords)
+writeCode('',result,()=>{
+    writeRusume('',resumeWords,()=>{
+       writeCode(result,lastResult,()=>{
+             resume.innerHTML=markdown.toHTML( resume.innerHTML );
+             writeCode(result+lastResult,`
+/* 本次简历展示到此结束
+谢谢观看~~ */
+`)
+       }) 
+    })
 })

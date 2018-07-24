@@ -31,4 +31,5 @@ body{
     border:8px #69DCFA solid;
     font-size:20px;
     padding:30px;
+    overflow: auto;
 }
